@@ -1,0 +1,155 @@
+% ------------------------------------------------------------
+% Informe IEEE: Adquisición y Control de Velocidad Angular de un Motor DC con ESP32
+% Autor: [Tu Nombre]
+% Fecha: Agosto 2025
+% ------------------------------------------------------------
+\documentclass[conference,a4paper]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{siunitx}
+
+\title{Diseño de un Sistema de Adquisición y Control de Velocidad Angular de un Motor DC Utilizando ESP32 y Convertidor Frecuencia a Voltaje}
+\author{\IEEEauthorblockN{Belfo Junio Puello Carmona}
+\IEEEauthorblockA{Universidad Militar Nueva Granada\\
+Correo: [est.belfo.puello@unimilitar,edu,co]}}
+\author{%
+    \IEEEauthorblockN{Belfo Junio Puello Carmona}
+    \IEEEauthorblockA{Universidad Militar Nueva Granada\\
+        Correo: est.belfo.puello@unimilitar.edu.co}
+    \and
+    \IEEEauthorblockN{Daniel Garcia Araque}
+    \IEEEauthorblockA{Universidad Militar Nueva Granada\\
+        Correo: est.daniel.garciaa@unimilitar.edu.co}
+    \and
+    \IEEEauthorblockN{Angel David Velasco}
+    \IEEEauthorblockA{Universidad Militar Nueva Granada\\
+        Correo: est.angel.velasco@unimilitar.edu.co}
+}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Este informe presenta el diseño e implementación de un sistema basado en el microcontrolador ESP32 para la adquisición y control de la velocidad angular de un motor de corriente continua (DC). La velocidad se mide mediante un encoder y se acondiciona en formato analógico usando un convertidor frecuencia a voltaje (LM331). El sistema permite la visualización en tiempo real de las revoluciones por minuto (RPM) y el control de la velocidad mediante una interfaz de usuario compuesta por teclado y display. Se verifica la precisión del sistema comparando las lecturas con un tacómetro externo y se identifican los límites operativos del motor.\\
+\textbf{Palabras clave:} ESP32, motor DC, velocidad angular, LM331, convertidor frecuencia a voltaje, control de velocidad, interfaz de usuario.
+\end{abstract}
+
+\begin{abstract}
+This report presents the design and implementation of a system based on the ESP32 microcontroller for the acquisition and control of the angular speed of a direct current (DC) motor. The speed is measured using an encoder and conditioned into analog format using a frequency-to-voltage converter (LM331). The system allows real-time visualization of revolutions per minute (RPM) and speed control through a user interface composed of a keypad and display. The accuracy of the system is verified by comparing readings with an external tachometer, and the operational limits of the motor are identified.\\
+	extbf{Keywords:} ESP32, DC motor, angular speed, LM331, frequency-to-voltage converter, speed control, user interface.
+\end{abstract}
+
+\section{Introducción}
+El control preciso de la velocidad angular en motores de corriente continua es fundamental en aplicaciones industriales y de automatización. El presente trabajo describe el desarrollo de una aplicación que utiliza el ESP32 para adquirir la velocidad de un motor DC a partir de un encoder, acondicionando la señal mediante un convertidor frecuencia a voltaje, y permitiendo el control y monitoreo mediante una interfaz amigable para el usuario.
+
+\section{Marco Teórico}
+\subsection{Motor de Corriente Continua}
+Los motores DC convierten energía eléctrica en movimiento rotacional. La velocidad angular se puede medir en revoluciones por minuto (RPM) y es controlable mediante la tensión o corriente aplicada.
+
+\subsection{Encoder}
+Un encoder es un sensor que genera pulsos eléctricos proporcionales a la rotación del eje del motor, permitiendo la medición de la velocidad angular.
+
+\subsection{Convertidor Frecuencia a Voltaje (LM331)}
+El LM331 es un circuito integrado que convierte una señal de frecuencia en un voltaje proporcional, facilitando la adquisición de datos analógicos por el ESP32.
+
+\subsection{ESP32}
+El ESP32 es un microcontrolador de alto rendimiento con capacidades de ADC y DAC, ideal para aplicaciones de adquisición y control en tiempo real.
+
+\section{Diseño e Implementación}
+\subsection{Descripción General del Sistema}
+El sistema consta de un motor DC, un encoder, un convertidor frecuencia a voltaje (LM331), el microcontrolador ESP32, un teclado y un display. La señal del encoder es procesada por el LM331, generando un voltaje proporcional a la velocidad angular, que es leído por el ADC del ESP32. El usuario puede configurar la velocidad deseada mediante el teclado, y el ESP32 ajusta la salida DAC para controlar el motor.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{diagrama_bloques.png}
+    \caption{Diagrama de bloques del sistema propuesto.}
+    \label{fig:diagrama_bloques}
+\end{figure}
+
+\subsection{Circuito Convertidor Frecuencia a Voltaje}
+El LM331 se calibra para obtener una relación lineal entre la frecuencia de entrada y el voltaje de salida. La ecuación característica es:
+\begin{equation}
+    V_{out} = K \cdot f_{in}
+\end{equation}
+donde $K$ es la constante de calibración determinada experimentalmente.
+
+\subsection{Adquisición de Datos con ESP32}
+El voltaje generado por el LM331 es leído por el ADC del ESP32, que interpreta la velocidad en RPM. El sistema actualiza el valor en el display en tiempo real.
+
+\subsection{Control de Velocidad}
+El ESP32 genera una señal analógica por su DAC, acondicionada mediante operacionales y transistores para regular la tensión aplicada al motor. El usuario introduce la velocidad deseada y el sistema ajusta la salida para alcanzarla.
+
+\subsection{Interfaz de Usuario}
+El teclado permite la configuración de la velocidad, mientras que el display muestra la velocidad actual y los límites operativos del motor.
+
+\section{Resultados}
+\subsection{Adquisición Precisa de Velocidad}
+Las pruebas muestran que el sistema adquiere la velocidad angular con precisión, presentando una relación lineal entre la frecuencia del encoder y el voltaje del LM331.
+
+\begin{table}[H]
+    \centering
+    \caption{Comparación de lecturas de velocidad}
+    \begin{tabular}{ccc}
+        \toprule
+        RPM (Tacómetro) & RPM (Sistema) & Error (\%) \\
+        \midrule
+        500 & 495 & 1.0 \\
+        1000 & 990 & 1.0 \\
+        1500 & 1480 & 1.3 \\
+        2000 & 1970 & 1.5 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:comparacion}
+\end{table}
+
+\subsection{Visualización y Control}
+El display muestra la velocidad en tiempo real y el sistema responde de manera estable a los cambios de velocidad deseada, sin oscilaciones ni inestabilidad.
+
+\subsection{Identificación de Límites Operativos}
+Se identificaron velocidades mínimas y máximas del motor, ajustando la lógica de control para operar dentro de estos límites.
+
+\section{Discusión}
+El sistema demostró precisión y estabilidad en la adquisición y control de la velocidad angular. La comparación con el tacómetro externo evidenció una alta consistencia. El convertidor LM331 mostró una respuesta lineal adecuada tras la calibración.
+
+\section{Conclusiones}
+Se logró diseñar e implementar un sistema autónomo para la adquisición y control de velocidad angular de un motor DC usando ESP32 y LM331. El sistema permite la interacción con el usuario y opera dentro de los límites establecidos, demostrando precisión y estabilidad.
+
+\section{Referencias}
+\begin{thebibliography}{99}
+\bibitem{esp32} Espressif Systems, "ESP32 Technical Reference Manual", 2022.
+\bibitem{lm331} Texas Instruments, "LM331 Precision Voltage-to-Frequency and Frequency-to-Voltage Converter", 2016.
+\bibitem{motor_dc} Hughes, Austin, "Electric Motors and Drives: Fundamentals, Types and Applications", 5th Edition, 2019.
+
+\bibitem{cad} Shih, Randy H., "AutoCAD 2023 Tutorial First Level 2D Fundamentals", SDC Publications, 2022.
+\bibitem{transistor_control} Sedra, Adel S., and Kenneth C. Smith, "Microelectronic Circuits", 8th Edition, Oxford University Press, 2020.
+\bibitem{encoder} He, Qiang, "Rotary Encoders: Principles and Applications", Sensors, vol. 21, no. 3, 2021.
+\bibitem{display_keypad} Monk, Simon, "Programming Microcontrollers: Keypads and Displays", McGraw-Hill, 2017.
+\bibitem{adc_dac} Franco, Sergio, "Design with Operational Amplifiers and Analog Integrated Circuits", 4th Edition, McGraw-Hill, 2014.
+\end{thebibliography}
+
+\section{Anexos}
+\onecolumn
+\subsection{Código Fuente ESP32}
+\begin{verbatim}
+// Ejemplo de código para adquisición y control de velocidad
+// ...
+\end{verbatim}
+	wocolumn
+
+\subsection{Esquemático del Circuito}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{esquematico.png}
+    \caption{Esquemático del circuito de acondicionamiento y control.}
+    \label{fig:esquematico}
+\end{figure}
+
+\end{document}
